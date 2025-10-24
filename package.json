@@ -1,0 +1,50 @@
+{
+  "name": "workers-fetch",
+  "version": "0.0.0",
+  "type": "module",
+  "bin": {
+    "workers-fetch": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:watch": "vitest watch",
+    "lint": "eslint --ext js,ts src",
+    "lint:fix": "eslint --ext js,ts src --fix",
+    "format": "prettier src --check",
+    "format:fix": "prettier src --write",
+    "postbuild": "publint",
+    "release": "np"
+  },
+  "files": [
+    "dist"
+  ],
+  "author": "Yusuke Wada <yusuke@kamawada.com> (https://github.com/yusukebe)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yusukebe/workers-fetch.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "dependencies": {
+    "commander": "^14.0.1"
+  },
+  "devDependencies": {
+    "@hono/eslint-config": "^1.1.1",
+    "@types/node": "^24.9.1",
+    "eslint": "^9.37.0",
+    "np": "^10.2.0",
+    "prettier": "^3.6.2",
+    "publint": "^0.3.14",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.45.0"
+  },
+  "packageManager": "bun@1.2.20"
+}
