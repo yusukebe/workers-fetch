@@ -5,8 +5,8 @@ import {
   buildUrl,
   formatResponse,
   getWorkerStartOptions,
-  type FetchOptions,
 } from './helpers'
+import type { FetchOptions } from './helpers'
 
 describe('parseHeaders', () => {
   it('should parse headers correctly', () => {
@@ -25,7 +25,10 @@ describe('parseHeaders', () => {
   })
 
   it('should trim whitespace', () => {
-    const headers = parseHeaders(['Content-Type: application/json ', ' Authorization : Bearer token'])
+    const headers = parseHeaders([
+      'Content-Type: application/json ',
+      ' Authorization : Bearer token',
+    ])
     expect(headers).toEqual({
       'Content-Type': 'application/json',
       Authorization: 'Bearer token',

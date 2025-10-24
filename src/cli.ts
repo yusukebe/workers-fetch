@@ -2,7 +2,8 @@ import { Command } from 'commander'
 import { readFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { sendRequest, type FetchOptions } from './helpers.js'
+import { sendRequest } from './helpers.js'
+import type { FetchOptions } from './helpers.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -29,15 +30,15 @@ program
       })
       console.log(JSON.stringify(result, null, 2))
     } catch (error) {
+      if (worker) {
+        await worker.dispose()
+      }
       if (error instanceof Error) {
         console.error('Error:', error.message)
-        if (error.stack) {
-          console.error(error.stack)
-        }
       } else {
         console.error('Error:', String(error))
       }
-      process.exit(1)
+      throw error
     } finally {
       if (worker) {
         await worker.dispose()

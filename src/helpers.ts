@@ -17,23 +17,29 @@ export interface FetchResult {
 }
 
 export function getWorkerStartOptions(options: FetchOptions) {
+  const baseOptions: any = {
+    dev: {
+      logLevel: 'none' as const,
+    },
+  }
+
   if (options.entry) {
-    return { script: options.entry }
+    return { ...baseOptions, script: options.entry }
   }
 
   if (options.config) {
-    return { config: options.config }
+    return { ...baseOptions, config: options.config }
   }
 
   // Auto-detect wrangler config file
   const configFiles = ['wrangler.json', 'wrangler.jsonc', 'wrangler.toml']
   for (const file of configFiles) {
     if (existsSync(file)) {
-      return { config: file }
+      return { ...baseOptions, config: file }
     }
   }
 
-  return { config: 'wrangler.json' }
+  return { ...baseOptions, config: 'wrangler.json' }
 }
 
 export function parseHeaders(headerArray?: string[]): Record<string, string> {
@@ -91,14 +97,18 @@ export async function sendRequest(
 ): Promise<FetchResult> {
   const startOptions = getWorkerStartOptions(options)
 
-  let worker
-  try {
-    worker = await unstable_startWorker(startOptions)
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to start worker: ${error.message}. Make sure your wrangler config file exists and is valid.`)
-    }
-    throw error
+  // Validate config file exists before starting worker
+  if ('config' in startOptions && startOptions.config && !existsSync(startOptions.config)) {
+    throw new Error(`Config file not found: ${startOptions.config}`)
+  }
+
+  const startTime = Date.now()
+  const worker = await unstable_startWorker(startOptions)
+  const elapsed = Date.now() - startTime
+
+  // Show message if startup took >= 1 second
+  if (elapsed >= 1000) {
+    console.error(`Starting worker... (${(elapsed / 1000).toFixed(1)}s)`)
   }
 
   onWorkerStarted(worker)

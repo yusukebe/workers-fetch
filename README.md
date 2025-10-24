@@ -11,7 +11,10 @@ npm install -g workers-fetch
 ## Usage
 
 ```bash
-# GET request
+# GET request (auto-detects wrangler.json, wrangler.jsonc, or wrangler.toml)
+workers-fetch
+
+# With path
 workers-fetch /api/users
 
 # POST request
@@ -23,10 +26,11 @@ workers-fetch -c wrangler.toml /api/test
 
 ## Options
 
+- `[path]` - Request path (default: `/`)
 - `-X, --method <method>` - HTTP method (default: GET)
 - `-H, --header <headers...>` - Custom headers (multiple allowed)
 - `-d, --data <data>` - Request body data
-- `-c, --config <path>` - Path to wrangler config file (default: wrangler.json)
+- `-c, --config <path>` - Path to wrangler config file (auto-detected if not specified)
 - `-e, --entry <path>` - Path to Worker entry file
 
 ## Output
@@ -43,6 +47,11 @@ Returns JSON format:
   "body": "{\"message\":\"success\"}"
 }
 ```
+
+## Requirements
+
+- Valid wrangler configuration file (`wrangler.json`, `wrangler.jsonc`, or `wrangler.toml`)
+- Worker dependencies installed (`npm install` or equivalent)
 
 ## How it works
 
