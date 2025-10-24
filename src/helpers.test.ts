@@ -160,6 +160,9 @@ describe('getWorkerStartOptions', () => {
     const result = getWorkerStartOptions(options)
 
     expect(result).toEqual({
+      dev: {
+        logLevel: 'none',
+      },
       script: 'src/worker.ts',
     })
   })
@@ -172,6 +175,9 @@ describe('getWorkerStartOptions', () => {
     const result = getWorkerStartOptions(options)
 
     expect(result).toEqual({
+      dev: {
+        logLevel: 'none',
+      },
       config: 'wrangler.toml',
     })
   })
@@ -183,6 +189,9 @@ describe('getWorkerStartOptions', () => {
     const result = getWorkerStartOptions(options)
 
     expect(result).toEqual({
+      dev: {
+        logLevel: 'none',
+      },
       config: 'wrangler.json',
     })
   })
@@ -196,6 +205,9 @@ describe('getWorkerStartOptions', () => {
     const result = getWorkerStartOptions(options)
 
     expect(result).toEqual({
+      dev: {
+        logLevel: 'none',
+      },
       script: 'src/worker.ts',
     })
   })
