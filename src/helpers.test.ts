@@ -152,21 +152,6 @@ describe('formatResponse', () => {
 })
 
 describe('getWorkerStartOptions', () => {
-  it('should return script option when entry is provided', () => {
-    const options: FetchOptions = {
-      method: 'GET',
-      entry: 'src/worker.ts',
-    }
-    const result = getWorkerStartOptions(options)
-
-    expect(result).toEqual({
-      dev: {
-        logLevel: 'none',
-      },
-      script: 'src/worker.ts',
-    })
-  })
-
   it('should return config option when config is provided', () => {
     const options: FetchOptions = {
       method: 'GET',
@@ -182,7 +167,7 @@ describe('getWorkerStartOptions', () => {
     })
   })
 
-  it('should return default config when neither entry nor config is provided', () => {
+  it('should return default config when config is not provided', () => {
     const options: FetchOptions = {
       method: 'GET',
     }
@@ -193,22 +178,6 @@ describe('getWorkerStartOptions', () => {
         logLevel: 'none',
       },
       config: 'wrangler.json',
-    })
-  })
-
-  it('should prefer entry over config when both are provided', () => {
-    const options: FetchOptions = {
-      method: 'GET',
-      entry: 'src/worker.ts',
-      config: 'wrangler.toml',
-    }
-    const result = getWorkerStartOptions(options)
-
-    expect(result).toEqual({
-      dev: {
-        logLevel: 'none',
-      },
-      script: 'src/worker.ts',
     })
   })
 })

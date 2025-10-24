@@ -6,7 +6,6 @@ export interface FetchOptions {
   header?: string[]
   data?: string
   config?: string
-  entry?: string
 }
 
 export interface FetchResult {
@@ -21,10 +20,6 @@ export function getWorkerStartOptions(options: FetchOptions) {
     dev: {
       logLevel: 'none' as const,
     },
-  }
-
-  if (options.entry) {
-    return { ...baseOptions, script: options.entry }
   }
 
   if (options.config) {

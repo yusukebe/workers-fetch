@@ -20,7 +20,6 @@ program
   .option('-H, --header <headers...>', 'Custom headers (e.g., "Content-Type:application/json")')
   .option('-d, --data <data>', 'Request body data')
   .option('-c, --config <path>', 'Path to wrangler configuration file')
-  .option('-e, --entry <path>', 'Path to Worker entry file (if config not provided)')
   .action(async (path: string, options: FetchOptions) => {
     let worker: any
 

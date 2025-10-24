@@ -31,7 +31,6 @@ workers-fetch -c wrangler.toml /api/test
 - `-H, --header <headers...>` - Custom headers (multiple allowed)
 - `-d, --data <data>` - Request body data
 - `-c, --config <path>` - Path to wrangler config file (auto-detected if not specified)
-- `-e, --entry <path>` - Path to Worker entry file
 
 ## Output
 
