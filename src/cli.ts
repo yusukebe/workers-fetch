@@ -20,6 +20,7 @@ program
   .option('-H, --header <headers...>', 'Custom headers (e.g., "Content-Type:application/json")')
   .option('-d, --data <data>', 'Request body data')
   .option('-c, --config <path>', 'Path to wrangler configuration file')
+  .option('--timeout <seconds>', 'Maximum time allowed for the request in seconds', '3')
   .action(async (path: string, options: FetchOptions) => {
     let worker: any
 
@@ -33,11 +34,10 @@ program
         await worker.dispose()
       }
       if (error instanceof Error) {
-        console.error('Error:', error.message)
+        program.error(error.message, { exitCode: 1, code: 'custom.error' })
       } else {
-        console.error('Error:', String(error))
+        program.error(String(error), { exitCode: 1, code: 'custom.error' })
       }
-      throw error
     } finally {
       if (worker) {
         await worker.dispose()

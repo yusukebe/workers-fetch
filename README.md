@@ -22,6 +22,9 @@ workers-fetch -X POST -H "Content-Type:application/json" -d '{"name":"test"}' /a
 
 # Custom config file
 workers-fetch -c wrangler.toml /api/test
+
+# With timeout (5 seconds)
+workers-fetch --timeout 5 /api/slow
 ```
 
 ## Options
@@ -31,6 +34,7 @@ workers-fetch -c wrangler.toml /api/test
 - `-H, --header <headers...>` - Custom headers (multiple allowed)
 - `-d, --data <data>` - Request body data
 - `-c, --config <path>` - Path to wrangler config file (auto-detected if not specified)
+- `--timeout <seconds>` - Maximum time allowed for the request in seconds (default: 3)
 
 ## Output
 

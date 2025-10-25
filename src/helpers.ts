@@ -6,6 +6,7 @@ export interface FetchOptions {
   header?: string[]
   data?: string
   config?: string
+  timeout?: string
 }
 
 export interface FetchResult {
@@ -97,23 +98,35 @@ export async function sendRequest(
     throw new Error(`Config file not found: ${startOptions.config}`)
   }
 
-  const startTime = Date.now()
   const worker = await unstable_startWorker(startOptions)
-  const elapsed = Date.now() - startTime
-
-  // Show message if startup took >= 1 second
-  if (elapsed >= 1000) {
-    console.error(`Starting worker... (${(elapsed / 1000).toFixed(1)}s)`)
-  }
-
   onWorkerStarted(worker)
 
   const headers = parseHeaders(options.header)
   const requestOptions = buildRequestOptions(options, headers)
   const url = buildUrl(path)
 
-  const response = await worker.fetch(url, requestOptions)
-  const body = await response.text()
+  // Parse timeout value
+  const timeoutMs = options.timeout ? parseFloat(options.timeout) * 1000 : 3000
 
-  return formatResponse(response, body)
+  // Create timeout promise with cancellation
+  let timeoutId: NodeJS.Timeout | undefined
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`Request timeout after ${timeoutMs / 1000} seconds`))
+    }, timeoutMs)
+  })
+
+  try {
+    // Race between fetch and timeout
+    const response = await Promise.race([worker.fetch(url, requestOptions), timeoutPromise])
+
+    const body = await response.text()
+
+    return formatResponse(response, body)
+  } finally {
+    // Clear timeout if request completed
+    if (timeoutId) {
+      clearTimeout(timeoutId)
+    }
+  }
 }
