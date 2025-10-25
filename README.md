@@ -50,7 +50,6 @@ Returns JSON format:
 ## Requirements
 
 - Valid wrangler configuration file (`wrangler.json`, `wrangler.jsonc`, or `wrangler.toml`)
-- Worker dependencies installed (`npm install` or equivalent)
 
 ## How it works
 
