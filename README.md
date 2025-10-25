@@ -59,6 +59,24 @@ Returns JSON format:
 
 Uses [`unstable_startWorker()`](https://developers.cloudflare.com/workers/testing/unstable_startworker/) to start a Worker locally and send requests.
 
+## AI Coding Agents
+
+You can help AI coding agents like Claude Code use this tool by adding project instructions.
+
+**`AGENTS.md` or `CLAUDE.md`:**
+
+```markdown
+# Project Instructions
+
+## `workers-fetch` command
+
+Use `workers-fetch` command to test apps.
+
+Run `workers-fetch --help` for usage details.
+```
+
+This allows AI coding agents to automatically discover and use the `workers-fetch` command when testing your Workers applications.
+
 ## Author
 
 Yusuke Wada https://github.com/yusukebe
