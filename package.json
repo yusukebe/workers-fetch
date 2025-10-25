@@ -32,7 +32,8 @@
     "access": "public"
   },
   "dependencies": {
-    "commander": "^14.0.1"
+    "commander": "^14.0.1",
+    "wrangler": "^4.45.0"
   },
   "devDependencies": {
     "@hono/eslint-config": "^1.1.1",
@@ -43,8 +44,7 @@
     "publint": "^0.3.14",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4",
-    "wrangler": "^4.45.0"
+    "vitest": "^3.2.4"
   },
   "packageManager": "bun@1.2.20"
 }

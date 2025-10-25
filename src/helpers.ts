@@ -1,5 +1,5 @@
 import { unstable_startWorker } from 'wrangler'
-import { existsSync } from 'fs'
+import { existsSync } from 'node:fs'
 
 export interface FetchOptions {
   method: string
