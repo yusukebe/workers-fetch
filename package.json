@@ -16,6 +16,7 @@
     "format": "prettier src --check",
     "format:fix": "prettier src --write",
     "postbuild": "publint",
+    "prerelease": "bun run build",
     "release": "np"
   },
   "files": [
