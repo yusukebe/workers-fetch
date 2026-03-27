@@ -6,8 +6,8 @@
     "workers-fetch": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsup",
-    "watch": "tsup --watch",
+    "build": "tsdown",
+    "watch": "tsdown --watch",
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest watch",
@@ -43,7 +43,7 @@
     "np": "^10.2.0",
     "prettier": "^3.6.2",
     "publint": "^0.3.14",
-    "tsup": "^8.5.0",
+    "tsdown": "^0.21.5",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   },
