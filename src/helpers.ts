@@ -19,7 +19,9 @@ export interface FetchResult {
 export function getWorkerStartOptions(options: FetchOptions) {
   const baseOptions: any = {
     dev: {
-      logLevel: 'none' as const,
+      // 'error' keeps normal runs quiet but lets startup failures reach stderr,
+      // e.g. workerd rejecting the project's compatibility_date
+      logLevel: 'error' as const,
     },
   }
 
@@ -86,11 +88,17 @@ export function formatResponse(response: any, body: string): FetchResult {
   }
 }
 
-export async function sendRequest(
-  path: string,
-  options: FetchOptions,
-  onWorkerStarted: (worker: any) => void
-): Promise<FetchResult> {
+export function formatErrorMessage(error: unknown): string {
+  const parts: string[] = []
+  let current: unknown = error
+  for (let depth = 0; current !== undefined && current !== null && depth < 5; depth++) {
+    parts.push(current instanceof Error ? current.message : String(current))
+    current = current instanceof Error ? current.cause : undefined
+  }
+  return parts.join('\nCaused by: ')
+}
+
+export async function sendRequest(path: string, options: FetchOptions): Promise<FetchResult> {
   const startOptions = getWorkerStartOptions(options)
 
   // Validate config file exists before starting worker
@@ -99,7 +107,6 @@ export async function sendRequest(
   }
 
   const worker = await unstable_startWorker(startOptions)
-  onWorkerStarted(worker)
 
   const headers = parseHeaders(options.header)
   const requestOptions = buildRequestOptions(options, headers)
@@ -121,8 +128,23 @@ export async function sendRequest(
     const response = await Promise.race([worker.fetch(url, requestOptions), timeoutPromise])
 
     const body = await response.text()
+    const result = formatResponse(response, body)
 
-    return formatResponse(response, body)
+    // The response is already in hand, so a dispose failure doesn't matter
+    await worker.dispose().catch(() => {})
+
+    return result
+  } catch (error) {
+    // When the runtime fails to start, unstable_startWorker() still resolves,
+    // worker.fetch() hangs until the timeout, and dispose() rejects with the
+    // root cause (e.g. MiniflareCoreError for an unsupported compatibility_date).
+    // Prefer that root cause over the secondary timeout error. dispose() must be
+    // called only once: a second call rejects with ERR_SERVER_NOT_RUNNING.
+    const disposeError = await worker.dispose().then(
+      () => undefined,
+      (e: unknown) => e
+    )
+    throw disposeError ?? error
   } finally {
     // Clear timeout if request completed
     if (timeoutId) {

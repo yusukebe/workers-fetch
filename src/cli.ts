@@ -2,7 +2,7 @@ import { Command } from 'commander'
 import { readFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { sendRequest } from './helpers.js'
+import { formatErrorMessage, sendRequest } from './helpers.js'
 import type { FetchOptions } from './helpers.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -22,26 +22,11 @@ program
   .option('-c, --config <path>', 'Path to wrangler configuration file')
   .option('--timeout <seconds>', 'Maximum time allowed for the request in seconds', '3')
   .action(async (path: string, options: FetchOptions) => {
-    let worker: any
-
     try {
-      const result = await sendRequest(path, options, (w) => {
-        worker = w
-      })
+      const result = await sendRequest(path, options)
       console.log(JSON.stringify(result, null, 2))
     } catch (error) {
-      if (worker) {
-        await worker.dispose()
-      }
-      if (error instanceof Error) {
-        program.error(error.message, { exitCode: 1, code: 'custom.error' })
-      } else {
-        program.error(String(error), { exitCode: 1, code: 'custom.error' })
-      }
-    } finally {
-      if (worker) {
-        await worker.dispose()
-      }
+      program.error(formatErrorMessage(error), { exitCode: 1, code: 'custom.error' })
     }
   })
 

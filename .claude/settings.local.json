@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(gh pr:*)",
-      "Bash(bun install)",
-      "Bash(bun run:*)"
-    ]
-  }
-}

@@ -4,8 +4,16 @@ A curl-like CLI tool for testing Cloudflare Workers locally.
 
 ## Installation
 
+Install it in your Workers project so that `workers-fetch` uses the same `wrangler` (and therefore the same `workerd` runtime) as your project:
+
 ```bash
-npm install -g workers-fetch
+npm install -D workers-fetch
+```
+
+`wrangler` is a peer dependency. If your project does not have it yet, install it too:
+
+```bash
+npm install -D wrangler
 ```
 
 ## Usage
@@ -54,6 +62,7 @@ Returns JSON format:
 ## Requirements
 
 - Valid wrangler configuration file (`wrangler.json`, `wrangler.jsonc`, or `wrangler.toml`)
+- `wrangler` v4.45+ as a peer dependency (use the one installed in your project)
 
 ## How it works
 
