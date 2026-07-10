@@ -4,6 +4,7 @@ import {
   buildRequestOptions,
   buildUrl,
   formatResponse,
+  formatErrorMessage,
   getWorkerStartOptions,
 } from './helpers'
 import type { FetchOptions } from './helpers'
@@ -151,6 +152,22 @@ describe('formatResponse', () => {
   })
 })
 
+describe('formatErrorMessage', () => {
+  it('should return the message of a plain error', () => {
+    expect(formatErrorMessage(new Error('boom'))).toBe('boom')
+  })
+
+  it('should stringify non-error values', () => {
+    expect(formatErrorMessage('boom')).toBe('boom')
+  })
+
+  it('should include the cause chain', () => {
+    const root = new Error('runtime failed to start')
+    const wrapper = new Error('request failed', { cause: root })
+    expect(formatErrorMessage(wrapper)).toBe('request failed\nCaused by: runtime failed to start')
+  })
+})
+
 describe('getWorkerStartOptions', () => {
   it('should return config option when config is provided', () => {
     const options: FetchOptions = {
@@ -161,7 +178,7 @@ describe('getWorkerStartOptions', () => {
 
     expect(result).toEqual({
       dev: {
-        logLevel: 'none',
+        logLevel: 'error',
       },
       config: 'wrangler.toml',
     })
@@ -175,7 +192,7 @@ describe('getWorkerStartOptions', () => {
 
     expect(result).toEqual({
       dev: {
-        logLevel: 'none',
+        logLevel: 'error',
       },
       config: 'wrangler.json',
     })

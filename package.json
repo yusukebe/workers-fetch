@@ -33,10 +33,13 @@
     "access": "public"
   },
   "dependencies": {
-    "commander": "^14.0.1",
+    "commander": "^14.0.1"
+  },
+  "peerDependencies": {
     "wrangler": "^4.45.0"
   },
   "devDependencies": {
+    "wrangler": "^4.45.0",
     "@hono/eslint-config": "^1.1.1",
     "@types/node": "^24.9.1",
     "eslint": "^9.37.0",

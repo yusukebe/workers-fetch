@@ -1,5 +1,7 @@
 node_modules
 dist
+.wrangler
+.claude
 package-lock.json
 *.tgz
 sandbox
